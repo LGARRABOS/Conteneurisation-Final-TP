@@ -9,6 +9,9 @@ jobs:
   test-back:
     name: Tests backend
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app/back   # <= IMPORTANT
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r app/back/requirements.txt
+          pip install -r requirements.txt
 
       - name: Run unit tests (pytest)
-        run: pytest app/back/tests
+        run: pytest
