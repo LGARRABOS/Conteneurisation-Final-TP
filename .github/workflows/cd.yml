@@ -1,0 +1,35 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  deploy:
+    name: Deploiement sur Kubernetes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+
+      - name: Afficher les infos du cluster
+        run: kubectl cluster-info
+
+      - name: Deployer les manifests
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/app-config.yaml
+          kubectl apply -f k8s/postgres-pvc.yaml
+          kubectl apply -f k8s/postgres-deployment.yaml
+          kubectl apply -f k8s/postgres-service.yaml
+          kubectl apply -f k8s/back-service.yaml
+          kubectl apply -f k8s/back-deployment.yaml
+          kubectl apply -f k8s/front-service.yaml
+          kubectl apply -f k8s/front-deployment.yaml
+          kubectl apply -f k8s/ingress.yaml
