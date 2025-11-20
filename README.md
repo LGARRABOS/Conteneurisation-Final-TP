@@ -7,9 +7,9 @@ Ce projet est une démonstration pratique de conteneurisation dans le cadre du c
 ## Documentation
 
 Pour plus de détails, consultez les fichiers suivants :
-- [Installation](./docs/installation.md) : Instructions pour installer et configurer le projet.
-- [Utilisation](./docs/utilisation.md) : Guide pour utiliser les fonctionnalités du projet.
-- [Architecture](./docs/architecture.md) : Description de l'architecture technique.
+- [Installation](./k8s/docs/architecture.md) : Architecture et choix techniques 
+- [Utilisation](./k8s/docs/runbook.md) : Guide de déploiement et d'exploitation
+- [Architecture](./k8s/docs/security.md) : Mesures de sécurité
 
 ## Screenshots
 ![alt text](image.png)
