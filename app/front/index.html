@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Liste d'items</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    input {
+      flex: 1;
+      padding: 8px;
+      font-size: 1em;
+    }
+    button {
+      padding: 8px 14px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    ul {
+      padding-left: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Items</h1>
+
+  <form id="item-form">
+    <input type="text" id="title" placeholder="Titre de l'item" required />
+    <button type="submit">Ajouter</button>
+  </form>
+
+  <ul id="items-list"></ul>
+
+  <script>
+    // IMPORTANT : en cluster Kubernetes, le backend est accessible via l'Ingress /api
+    const API_URL = "/api";
+
+    async function loadItems() {
+      try {
+        const res = await fetch(`${API_URL}/items`);
+        if (!res.ok) throw new Error("Erreur API");
+        const items = await res.json();
+
+        const ul = document.getElementById("items-list");
+        ul.innerHTML = "";
+
+        items.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = `${item.id} - ${item.title} (${new Date(item.created_at).toLocaleString()})`;
+          ul.appendChild(li);
+        });
+      } catch (err) {
+        console.error("Erreur chargement items :", err);
+      }
+    }
+
+    document.getElementById("item-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById("title").value;
+
+      try {
+        const res = await fetch(`${API_URL}/items?title=${encodeURIComponent(title)}`, {
+          method: "POST",
+        });
+
+        if (!res.ok) throw new Error("Erreur API");
+
+        document.getElementById("title").value = "";
+        loadItems();
+
+      } catch (err) {
+        console.error("Erreur lors de l'ajout :", err);
+      }
+    });
+
+    // Chargement initial
+    loadItems();
+  </script>
+
+</body>
+</html>
