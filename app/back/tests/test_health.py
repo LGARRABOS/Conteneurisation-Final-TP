@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from main import app
+from app.back.main import app  # <– changement important
 
 client = TestClient(app)
 
